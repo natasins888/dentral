@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จองคิวสำเร็จ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', sans-serif; }
+        body { background-color: #f0f7ff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: #ffffff; width: 100%; max-width: 460px; padding: 40px 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; }
+        .check-icon { width: 65px; height: 65px; background: #ecfdf5; color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 16px; }
+        h1 { color: #0f172a; font-size: 22px; margin-bottom: 6px; }
+        p { color: #64748b; font-size: 14px; margin-bottom: 25px; }
+        .queue-display { background: #f0f9ff; border: 2px solid #bae6fd; border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+        .queue-label { font-size: 13px; color: #0369a1; font-weight: 500; }
+        .queue-num { font-size: 42px; font-weight: 700; color: #0284c7; line-height: 1.2; margin: 4px 0; }
+        .ticket { background: #f8fafc; border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 18px; text-align: left; margin-bottom: 25px; font-size: 14px; }
+        .ticket-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .ticket-row:last-child { margin-bottom: 0; }
+        .t-label { color: #64748b; }
+        .t-val { color: #0f172a; font-weight: 500; }
+        .btn-home { display: block; width: 100%; background: #0284c7; color: white; padding: 12px; border-radius: 10px; font-size: 15px; text-decoration: none; font-weight: 500; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="check-icon">&#10003;</div>
+        <h1>บันทึกการจองสำเร็จ!</h1>
+        <p>กรุณามาติดต่อก่อนเวลาคลินิกเปิดทำการ 10-15 นาที</p>
+
+        <div class="queue-display">
+            <div class="queue-label">ลำดับคิวของคุณ</div>
+            <div class="queue-num">คิวที่ {{ booking.queue_number }}</div>
+            <small style="color: #64748b;">ประจำวันที่ {{ booking.date }}</small>
+        </div>
+
+        <div class="ticket">
+            <div class="ticket-row">
+                <span class="t-label">ชื่อผู้รับบริการ:</span>
+                <span class="t-val">{{ booking.name }}</span>
+            </div>
+            <div class="ticket-row">
+                <span class="t-label">บริการ:</span>
+                <span class="t-val">{{ booking.services }}</span>
+            </div>
+            <div class="ticket-row">
+                <span class="t-label">รหัสอ้างอิงระบบ:</span>
+                <span class="t-val">#BK-{{ booking.id }}</span>
+            </div>
+        </div>
+
+        <a href="/" class="btn-home">กลับสู่หน้าแรก</a>
+    </div>
+</body>
+</html>

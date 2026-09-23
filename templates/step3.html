@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้า 3 - ยืนยันข้อมูล</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', sans-serif; }
+        body { background-color: #f0f7ff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: #ffffff; width: 100%; max-width: 480px; padding: 35px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 114, 255, 0.08); }
+        .steps { display: flex; justify-content: space-between; margin-bottom: 28px; }
+        .step-item { text-align: center; flex: 1; font-size: 13px; color: #a0aec0; font-weight: 500; }
+        .step-item.active { color: #0284c7; font-weight: 600; }
+        .step-circle { width: 32px; height: 32px; line-height: 32px; border-radius: 50%; background: #e2e8f0; color: #718096; margin: 0 auto 6px; font-size: 14px; }
+        .step-item.active .step-circle { background: #0284c7; color: #fff; }
+        h1 { color: #0f172a; font-size: 24px; text-align: center; margin-bottom: 8px; font-weight: 600; }
+        .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 25px; }
+        .summary-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
+        .summary-row:last-child { margin-bottom: 0; }
+        .summary-label { color: #64748b; }
+        .summary-value { color: #0f172a; font-weight: 500; text-align: right; }
+        .badge { background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; font-size: 13px; margin-left: 4px; display: inline-block; }
+        .badge-queue { background: #ecfdf5; color: #059669; padding: 4px 10px; border-radius: 8px; font-weight: 600; font-size: 15px; border: 1px solid #a7f3d0; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn-back { flex: 1; text-align: center; text-decoration: none; background: #e2e8f0; color: #475569; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 500; line-height: 1.5; }
+        .btn-submit { flex: 2; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: 500; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="steps">
+            <div class="step-item"><div class="step-circle">&#10003;</div>ข้อมูลทั่วไป</div>
+            <div class="step-item"><div class="step-circle">&#10003;</div>เลือกบริการ</div>
+            <div class="step-item active"><div class="step-circle">3</div>ยืนยันการนัด</div>
+        </div>
+
+        <h1>ตรวจสอบข้อมูล</h1>
+        <p class="subtitle">ระบบจัดลำดับคิวให้คุณตามวันที่ที่เลือก</p>
+
+        <div class="summary-box">
+            <div class="summary-row">
+                <span class="summary-label">ชื่อผู้จอง:</span>
+                <span class="summary-value">{{ name }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">วันที่นัดหมาย:</span>
+                <span class="summary-value">{{ date }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">ลำดับคิวของคุณ:</span>
+                <span class="badge-queue">คิวที่ {{ queue_number }}</span>
+            </div>
+            <div class="summary-row">
+                <span class="summary-label">บริการที่เลือก:</span>
+                <div style="text-align: right; max-width: 60%;">
+                    {% if services %}
+                        {% for s in services %}
+                            <span class="badge">{{ s }}</span>
+                        {% endfor %}
+                    {% else %}
+                        <span class="summary-value">-</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <form method="POST">
+            <div class="btn-group">
+                <a href="/step2" class="btn-back">&larr; ย้อนกลับ</a>
+                <button type="submit" class="btn-submit">ยืนยันการรับคิว</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

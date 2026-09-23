@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบผู้ดูแล - คลินิก</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', sans-serif; }
+        body { background-color: #f0f7ff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: white; width: 100%; max-width: 380px; padding: 35px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; }
+        h2 { color: #0f172a; margin-bottom: 8px; font-size: 20px; }
+        p { color: #64748b; font-size: 13px; margin-bottom: 20px; }
+        input[type="password"] { width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 16px; text-align: center; letter-spacing: 4px; outline: none; margin-bottom: 15px; }
+        input[type="password"]:focus { border-color: #0284c7; }
+        .btn-submit { width: 100%; background: #0284c7; color: white; border: none; padding: 12px; border-radius: 10px; font-size: 15px; cursor: pointer; font-weight: 500; }
+        .error { color: #dc2626; font-size: 13px; margin-bottom: 15px; }
+        .back-link { display: inline-block; margin-top: 15px; font-size: 13px; color: #64748b; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div style="font-size: 40px; margin-bottom: 10px;">🔒</div>
+        <h2>สำหรับเจ้าหน้าที่</h2>
+        <p>กรุณากรอกรหัสผ่านเพื่อเข้าสู่หน้ารายการจอง </p>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <input type="password" name="password" placeholder="••••" required autofocus>
+            <button type="submit" class="btn-submit">ยืนยัน</button>
+        </form>
+
+        <a href="/" class="back-link">&larr; กลับสู่หน้าแรก</a>
+    </div>
+</body>
+</html>

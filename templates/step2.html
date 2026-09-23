@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้า 2 - เลือกรายการบริการ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', sans-serif; }
+        body { background-color: #f0f7ff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .card { background: #ffffff; width: 100%; max-width: 480px; padding: 35px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 114, 255, 0.08); }
+        .steps { display: flex; justify-content: space-between; margin-bottom: 28px; }
+        .step-item { text-align: center; flex: 1; font-size: 13px; color: #a0aec0; font-weight: 500; }
+        .step-item.active { color: #0284c7; font-weight: 600; }
+        .step-circle { width: 32px; height: 32px; line-height: 32px; border-radius: 50%; background: #e2e8f0; color: #718096; margin: 0 auto 6px; font-size: 14px; }
+        .step-item.active .step-circle { background: #0284c7; color: #fff; }
+        h1 { color: #0f172a; font-size: 24px; text-align: center; margin-bottom: 8px; font-weight: 600; }
+        .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 25px; }
+        .services-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .service-label { display: flex; align-items: center; padding: 14px 16px; border: 1.5px solid #e2e8f0; border-radius: 10px; cursor: pointer; background-color: #f8fafc; }
+        .service-label:hover { border-color: #93c5fd; background-color: #f0f7ff; }
+        .service-label input[type="checkbox"] { width: 18px; height: 18px; margin-right: 12px; accent-color: #0284c7; cursor: pointer; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn-back { flex: 1; text-align: center; text-decoration: none; background: #e2e8f0; color: #475569; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 500; line-height: 1.5; }
+        .btn-submit { flex: 2; background: linear-gradient(135deg, #0284c7, #0369a1); color: white; padding: 14px; border: none; border-radius: 10px; font-size: 16px; font-weight: 500; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="steps">
+            <div class="step-item"><div class="step-circle">&#10003;</div>ข้อมูลทั่วไป</div>
+            <div class="step-item active"><div class="step-circle">2</div>เลือกบริการ</div>
+            <div class="step-item"><div class="step-circle">3</div>ยืนยันการนัด</div>
+        </div>
+
+        <h1>เลือกรายการบริการ</h1>
+        <p class="subtitle">สามารถเลือกรับบริการได้มากกว่า 1 รายการ</p>
+
+        <form method="POST">
+            <div class="services-list">
+                {% for s in services %}
+                <label class="service-label">
+                    <input type="checkbox" name="services" value="{{ s }}" {% if s in chosen_services %}checked{% endif %}>
+                    <span>{{ s }}</span>
+                </label>
+                {% endfor %}
+            </div>
+
+            <div class="btn-group">
+                <a href="/step1" class="btn-back">&larr; ย้อนกลับ</a>
+                <button type="submit" class="btn-submit">ถัดไป &rarr;</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

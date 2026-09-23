@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ระบบจัดการคิว - สำหรับเจ้าหน้าที่</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; font-family: 'Prompt', sans-serif; }
+        body { background-color: #f8fafc; padding: 40px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .btn-group { display: flex; gap: 8px; align-items: center; }
+        
+        /* แถบตัวกรองวันที่ */
+        .filter-bar { display: flex; align-items: center; gap: 10px; background: #f1f5f9; padding: 12px 16px; border-radius: 8px; margin-bottom: 15px; }
+        .filter-bar label { font-size: 14px; font-weight: 500; color: #334155; }
+        .filter-bar select, .filter-bar input[type="date"] { padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none; background: white; }
+        
+        table { width: 100%; border-collapse: collapse; text-align: left; margin-top: 10px; }
+        th, td { padding: 12px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        th { background: #f8fafc; color: #475569; }
+        .btn { padding: 8px 14px; color: white; text-decoration: none; border-radius: 6px; font-size: 13px; font-weight: 500; border: none; cursor: pointer; display: inline-flex; align-items: center; }
+        .btn-primary { background: #0284c7; }
+        .btn-success { background: #10b981; }
+        .btn-danger { background: #ef4444; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-delete-row { background: #fee2e2; color: #b91c1c; padding: 5px 10px; border-radius: 6px; font-size: 12px; border: 1px solid #fecaca; cursor: pointer; }
+        .btn-delete-row:hover { background: #ef4444; color: white; }
+        .q-badge { background: #e0f2fe; color: #0284c7; padding: 3px 8px; border-radius: 6px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h2 style="color: #0f172a; margin: 0;">รายการจองคิวทั้งหมด</h2>
+                <small style="color: #64748b;">ระบบจัดการข้อมูลหลังบ้านคลินิก</small>
+            </div>
+            <div class="btn-group">
+                <a href="/export" class="btn btn-success">📥 โหลด Excel</a>
+                <a href="/step1" class="btn btn-primary">+ จองคิว</a>
+                
+                {% if bookings %}
+                <form method="POST" action="/admin/clear_all" onsubmit="return confirm('⚠️ คุณต้องการล้างข้อมูลการจองทั้งหมดใช่หรือไม่?');" style="margin: 0;">
+                    <button type="submit" class="btn btn-warning">🗑️ ล้างข้อมูลทั้งหมด</button>
+                </form>
+                {% endif %}
+
+                <a href="/admin/logout" class="btn btn-danger">ออกจากระบบ</a>
+            </div>
+        </div>
+
+        <!-- กล่องตัวกรองเลือกวันที่ -->
+        <form method="GET" action="/admin" class="filter-bar">
+            <label for="date">📅 เลือกดูตามวันที่:</label>
+            <select name="date" id="date" onchange="this.form.submit()">
+                <option value="">-- แสดงทุกวันทั้งหมด --</option>
+                {% for d in all_dates %}
+                    <option value="{{ d }}" {% if d == selected_date %}selected{% endif %}>{{ d }}</option>
+                {% endfor %}
+            </select>
+            {% if selected_date %}
+                <a href="/admin" style="font-size: 13px; color: #0284c7; text-decoration: none;">(ล้างตัวกรอง)</a>
+            {% endif %}
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ชื่อ-นามสกุล</th>
+                    <th>วันที่นัด</th>
+                    <th>ลำดับคิว</th>
+                    <th>บริการที่เลือก</th>
+                    <th style="text-align: center;">จัดการ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for b in bookings %}
+                <tr>
+                    <td>{{ b.id }}</td>
+                    <td><b>{{ b.name }}</b></td>
+                    <td>{{ b.date }}</td>
+                    <td><span class="q-badge">คิวที่ {{ b.queue_number }}</span></td>
+                    <td>{{ b.services }}</td>
+                    <td style="text-align: center;">
+                        <form method="POST" action="/admin/delete/{{ b.id }}" onsubmit="return confirm('ยืนยันลบคิวของคุณ {{ b.name }} หรือไม่?');" style="margin: 0;">
+                            <button type="submit" class="btn-delete-row">ลบ</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #94a3b8; padding: 25px;">
+                        {% if selected_date %}
+                            ไม่พบคิวในวันที่ {{ selected_date }}
+                        {% else %}
+                            ยังไม่มีข้อมูลการจองในระบบ
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
