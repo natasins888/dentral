@@ -6,17 +6,17 @@ from data import SERVICE_LIST
 
 app = Flask(__name__)
 app.secret_key = "mysecretkey"
+
+# ตั้งค่าฐานข้อมูล SQLite
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///clinic.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
-# ลบตารางเก่าที่ไม่มี queue_number ทิ้ง แล้วสร้างตารางใหม่ให้อัตโนมัติทันที
 with app.app_context():
-    
     db.create_all()
 
-# --- 1. หน้าแรก (ต้อนรับ) ---
+# --- 1. หน้าแรก (หน้าต้อนรับ) ---
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -47,7 +47,7 @@ def step2():
         
     return render_template("step2.html", services=SERVICE_LIST, chosen_services=session.get("services", []))
 
-# --- 4. ขั้นตอนที่ 3: สรุปข้อมูล รันเลขคิว และบันทึกลง Database ---
+# --- 4. ขั้นตอนที่ 3: ยืนยันข้อมูล และคำนวณลำดับคิวอัตโนมัติ ---
 @app.route("/step3", methods=["GET", "POST"])
 def step3():
     name = session.get("name")
@@ -57,71 +57,70 @@ def step3():
     if not name or not date:
         return redirect(url_for("step1"))
     
-    # รันเลขคิวอัตโนมัติตามวันที่เลือก
-    existing_count = Booking.query.filter_by(date=date).count()
-    next_queue = existing_count + 1
-
     if request.method == "POST":
+        # นับจำนวนคนที่จองในวันเดียวกัน เพื่อออกเป็นลำดับคิวของวันนั้น
+        count_today = Booking.query.filter_by(date=date).count()
+        queue_number = count_today + 1
+        
         service_text = ", ".join(services) if services else "ไม่ได้ระบุ"
-        new_booking = Booking(name=name, date=date, queue_number=next_queue, services=service_text)
+        
+        # บันทึกลงฐานข้อมูลพร้อมลำดับคิว
+        new_booking = Booking(
+            name=name, 
+            date=date, 
+            queue_number=queue_number, 
+            services=service_text
+        )
         db.session.add(new_booking)
         db.session.commit()
         
         booking_id = new_booking.id
+        
+        # ล้างค่าใน session การกรอก
         session.pop("name", None)
         session.pop("date", None)
         session.pop("services", None)
         
         return redirect(url_for("success", booking_id=booking_id))
         
-    return render_template("step3.html", name=name, date=date, queue_number=next_queue, services=services)
+    return render_template("step3.html", name=name, date=date, services=services)
 
-# --- 5. หน้าใบนัดหมายเมื่อจองสำเร็จ ---
+# --- 5. หน้าแสดงใบนัดเมื่อจองสำเร็จ ---
 @app.route("/success/<int:booking_id>")
 def success(booking_id):
     booking = Booking.query.get_or_404(booking_id)
     return render_template("success.html", booking=booking)
 
-# --- 6. แอดมิน: เข้าสู่ระบบ (รหัส: 1111) ---
+# --- 6. เจ้าหน้าที่: เข้าสู่ระบบ (รหัส 1111) ---
 @app.route("/admin/login", methods=["GET", "POST"])
 def admin_login():
     error = None
     if request.method == "POST":
-        if request.form.get("password") == "1111":
+        password = request.form.get("password")
+        if password == "1111":
             session["admin_logged_in"] = True
             return redirect(url_for("admin"))
         else:
-            error = "รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง"
+            error = "รหัสผ่านไม่ถูกต้อง"
     return render_template("admin_login.html", error=error)
 
-# --- 7. แอดมิน: ออกจากระบบ ---
+# --- 7. เจ้าหน้าที่: ออกจากระบบ ---
 @app.route("/admin/logout")
 def admin_logout():
     session.pop("admin_logged_in", None)
     return redirect(url_for("index"))
 
-# --- 8. แอดมิน: ดูรายการจองทั้งหมด (เพิ่มระบบกรองตามวันที่) ---
+# --- 8. เจ้าหน้าที่: หน้ารายการจองทั้งหมด ---
 @app.route("/admin")
 def admin():
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
         
-    selected_date = request.args.get("date", "")
-    
-    # ดึงรายชื่อวันที่ทั้งหมดที่มีการจอง เพื่อนำไปทำเป็นตัวเลือก Dropdown
-    all_dates = [d[0] for d in db.session.query(Booking.date).distinct().order_by(Booking.date.asc()).all()]
-    
-    # หากมีการเลือกวันที่ ให้ดึงเฉพาะวันนั้นและเรียงตามลำดับคิว
-    if selected_date:
-        bookings = Booking.query.filter_by(date=selected_date).order_by(Booking.queue_number.asc()).all()
-    else:
-        # หากไม่เลือก ให้แสดงทั้งหมดเรียงจากรายการล่าสุด
-        bookings = Booking.query.order_by(Booking.id.desc()).all()
-        
-    return render_template("admin.html", bookings=bookings, all_dates=all_dates, selected_date=selected_date)
+    bookings = Booking.query.order_by(Booking.id.desc()).all()
+    return render_template("admin.html", bookings=bookings)
 
-# --- 10. แอดมิน: ล้างข้อมูลทั้งหมด ---
-@app.route("/admin/clear_all", methods=["POST"])
+# --- 9. เจ้าหน้าที่: ล้างข้อมูลการจองทั้งหมด ---
+@app.route("/admin/clear")
 def clear_all_bookings():
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
@@ -130,7 +129,7 @@ def clear_all_bookings():
     db.session.commit()
     return redirect(url_for("admin"))
 
-# --- 11. แอดมิน: ส่งออกไฟล์ Excel (CSV) ---
+# --- 10. เจ้าหน้าที่: ส่งออกไฟล์ Excel (CSV) ---
 @app.route("/export")
 def export_csv():
     if not session.get("admin_logged_in"):
