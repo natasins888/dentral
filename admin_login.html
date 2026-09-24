@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ - ผู้ดูแล</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', sans-serif; }
+        body { background-color: #f0f7ff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .login-card { background: white; width: 100%; max-width: 400px; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0, 114, 255, 0.08); text-align: center; }
+        h1 { color: #0f172a; font-size: 24px; margin-bottom: 25px; }
+        .form-group { text-align: left; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #334155; font-size: 14px; font-weight: 500; }
+        input[type="password"] { width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 15px; outline: none; }
+        input:focus { border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15); }
+        .btn-submit { width: 100%; background: #0284c7; color: white; padding: 14px; border: none; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 10px; }
+        .error { color: #ef4444; font-size: 13px; margin-bottom: 15px; }
+        .back-link { display: inline-block; margin-top: 20px; font-size: 13px; color: #64748b; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h1>เข้าสู่ระบบจัดการ</h1>
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+        <form method="POST">
+            <div class="form-group">
+                <label for="password">รหัสผ่านสำหรับเจ้าหน้าที่</label>
+                <input type="password" id="password" name="password" required autofocus placeholder="กรอกรหัสผ่าน ">
+            </div>
+            <button type="submit" class="btn-submit">เข้าสู่ระบบ</button>
+        </form>
+        <a href="/" class="back-link">&larr; กลับไปหน้าแรก</a>
+    </div>
+</body>
+</html>
