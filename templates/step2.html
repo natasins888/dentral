@@ -32,10 +32,8 @@
             <div class="step-item active"><div class="step-circle">2</div>เลือกบริการ</div>
             <div class="step-item"><div class="step-circle">3</div>ยืนยันการนัด</div>
         </div>
-
         <h1>เลือกรายการบริการ</h1>
         <p class="subtitle">สามารถเลือกรับบริการได้มากกว่า 1 รายการ</p>
-
         <form method="POST">
             <div class="services-list">
                 {% for s in services %}
@@ -45,7 +43,6 @@
                 </label>
                 {% endfor %}
             </div>
-
             <div class="btn-group">
                 <a href="/step1" class="btn-back">&larr; ย้อนกลับ</a>
                 <button type="submit" class="btn-submit">ถัดไป &rarr;</button>

@@ -8,7 +8,7 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Prompt', sans-serif; }
         body { background-color: #f0f7ff; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .card { background: #ffffff; width: 100%; max-width: 480px; padding: 35px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 114, 255, 0.08); }
+        .card { background: #ffffff; width: 100%; max-width: 480px; padding: 35px 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0, 114, 255, 0.08); margin: 20px 0;}
         .steps { display: flex; justify-content: space-between; margin-bottom: 28px; }
         .step-item { text-align: center; flex: 1; font-size: 13px; color: #a0aec0; font-weight: 500; }
         .step-item.active { color: #0284c7; font-weight: 600; }
@@ -17,8 +17,8 @@
         h1 { color: #0f172a; font-size: 24px; text-align: center; margin-bottom: 8px; font-weight: 600; }
         .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 25px; }
         .summary-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 25px; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
-        .summary-row:last-child { margin-bottom: 0; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 12px;}
+        .summary-row:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0;}
         .summary-label { color: #64748b; }
         .summary-value { color: #0f172a; font-weight: 500; text-align: right; }
         .badge { background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 6px; font-size: 13px; margin-left: 4px; display: inline-block; }
@@ -35,14 +35,12 @@
             <div class="step-item"><div class="step-circle">&#10003;</div>เลือกบริการ</div>
             <div class="step-item active"><div class="step-circle">3</div>ยืนยันการนัด</div>
         </div>
-
         <h1>ตรวจสอบข้อมูล</h1>
-        <p class="subtitle">ระบบจัดลำดับคิวให้คุณตามวันที่ที่เลือก</p>
-
+        <p class="subtitle">ตรวจสอบรายละเอียดการจองคิวของคุณ</p>
         <div class="summary-box">
             <div class="summary-row">
                 <span class="summary-label">ชื่อผู้จอง:</span>
-                <span class="summary-value">{{ name }}</span>
+                <span class="summary-value">{{ name }} (อายุ {{ age }} ปี, เพศ {{ gender }})</span>
             </div>
             <div class="summary-row">
                 <span class="summary-label">วันที่นัดหมาย:</span>
@@ -53,6 +51,10 @@
                 <span class="badge-queue">คิวที่ {{ queue_number }}</span>
             </div>
             <div class="summary-row">
+                <span class="summary-label">เวลาที่ทำรายการ:</span>
+                <span class="summary-value" style="font-size: 13px; color: #64748b;">{{ time }} น.</span>
+            </div>
+            <div class="summary-row" style="border: none;">
                 <span class="summary-label">บริการที่เลือก:</span>
                 <div style="text-align: right; max-width: 60%;">
                     {% if services %}
@@ -65,7 +67,6 @@
                 </div>
             </div>
         </div>
-
         <form method="POST">
             <div class="btn-group">
                 <a href="/step2" class="btn-back">&larr; ย้อนกลับ</a>

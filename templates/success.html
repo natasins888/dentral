@@ -28,13 +28,11 @@
         <div class="check-icon">&#10003;</div>
         <h1>บันทึกการจองสำเร็จ!</h1>
         <p>กรุณามาติดต่อก่อนเวลาคลินิกเปิดทำการ 10-15 นาที</p>
-
         <div class="queue-display">
             <div class="queue-label">ลำดับคิวของคุณ</div>
             <div class="queue-num">คิวที่ {{ booking.queue_number }}</div>
             <small style="color: #64748b;">ประจำวันที่ {{ booking.date }}</small>
         </div>
-
         <div class="ticket">
             <div class="ticket-row">
                 <span class="t-label">ชื่อผู้รับบริการ:</span>
@@ -49,7 +47,6 @@
                 <span class="t-val">#BK-{{ booking.id }}</span>
             </div>
         </div>
-
         <a href="/" class="btn-home">กลับสู่หน้าแรก</a>
     </div>
 </body>
